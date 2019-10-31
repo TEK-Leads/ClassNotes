@@ -594,7 +594,6 @@ Communication Stateless
 -----------------------
 In Rest api communication, every client request will be considered as new request. Nothing will be stored at server.
 
-
 HATEOS
 ------
 Hypermedia as an engine for application state
@@ -602,17 +601,119 @@ Hypermedia as an engine for application state
 
 
 
+Working with JSON
+-----------------
+JSON - Java Script Object Notation
+
+JSON is platform independent & language independent
+
+JSON is light weight when compared with XML
+
+JSON represents data in key-value format
 
 
+To work with JSON data in Java applications we can use below apis
+------------------------------------------------------------------
+1) Jackson
+2) Gson
+
+Jackson API
+-----------
+ObjectMapper mapper = new ObjectMapper();
+ 
+//converting java obj to json data
+String personJson = mapper.writeValueAsString(personObj);
+
+//converting json data to java obj
+Person p = mapper.readValue(personJson,Person.class);
+
+Gson API
+--------
+Gson gson = new Gson();
+
+//convert java obj to json
+String personJson = gson.toJson(personObj);
+
+//convert json to java object
+Person p = gson.fromJson(personJson,Person.class);
 
 
+RestController with Json Data
+-----------------------------
+@RestController ---> Class will become distributed component
+
+@GetMapping --> To bind method to HTTP GET request
+
+GET : If server wants to send data to client then use GET request method (client will send GET request to get the data)
+
+-> GET request will not contain body
+------------------------------------------------------------
 
 
+@PostMapping --> To bind method to HTTP Post request
+
+POST : If server wants to recieve the data to create new record then use POST request method (Client will send data in POST request body).
+
+-> POST request will contain body
 
 
+Consumes & Produces
+-------------------
+Consumes represents in which format rest api method can recieve the data
+
+Produces represents in which format rest api method can provide the response
+
+Note: one method can support for multiple consume and produces formats.
+
+GET request with Produces syntax
+--------------------------------
+
+@GetMapping(
+	value="/getCustomer",
+	produces={
+		"application/json"
+	}
+)
+public Customer getCustomer(){
+	//logic
+	return customerObj;
+}
+
+Note: When client sending GET request to above method he should send
+Accept header.
+
+syntax : Accept=application/json
+
+Note: Accept header represents client expecting response format from server.
+
+POST Request method with JSON
+-----------------------------
+@PostMapping(
+	value="/addCustomer",
+	consumes= {
+		"application/json",
+		"application/xml"
+	}
+)
+public String addCustomer(Customer c){
+	//logic
+	return "Success";
+}
+
+When Client is sending POST request with data in request body, he should send one header called 'Content-Type'
+
+Content-Type header represents in which format client is sending data to server in request body.
+
+Syntax: Content-Type=application/json
 
 
+Rest API Testing Tools
+-----------------------
+1) SOAP UI
 
+2) POSTMAN
+
+3) Swagger UI
 
 
 
