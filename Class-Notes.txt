@@ -691,11 +691,10 @@ POST Request method with JSON
 @PostMapping(
 	value="/addCustomer",
 	consumes= {
-		"application/json",
-		"application/xml"
+		"application/json"
 	}
 )
-public String addCustomer(Customer c){
+public String addCustomer(@RequestBody Customer c){
 	//logic
 	return "Success";
 }
@@ -716,7 +715,266 @@ Rest API Testing Tools
 3) Swagger UI
 
 
+JAX-B API
+---------
+Java Architecture For XML Binding. This api is used to convert java object to xml data and vice versa.
+
+
+XML
+XSD
+One Time Operation
+Runtime Operations
+	- Marshalling
+	- Un-Marshalling
+
+
+XML
+---
+XML stands for extensible markup language
+
+XML provided by w3c org
+
+Initial version of xml is 1.0 and current version of xml is also 1.0
+
+XML is platform independent and language independent
+
+XMl is intereoperable
+
+People will use xml to represent the data and to transfer the data
+
+Sample
+------
+<?xml version="1.0" encoding="UTF-8"?>
+<person id="101">
+   <first-name>Cedrone</first-name>
+   <last-name>Charles</last-name>
+</person>
+
+Simple Element : The element which contains data 
+
+	Ex : first-name & last-name
+
+Compound Element : The element which contains child element(s)
+
+	Ex : person
+
+Attribute : To store supplement information
+
+	Ex :  id
+
+
+Xml is used to store the data
+
+XSD is used to represent structure of the xml
+
+
+One Time Operation
+------------------
+Creating binding classes is called One Time Operation
+
+Note: If we have XSD, then we can create binding classes for that XSD using XJC compiler.
+
+Once we have binding classes then we can perform Runtime Operations
+--------------------------------------------------------------------
+1) Marshalling
+
+2) Un-Marshalling
+
+
+Note: Without having binding classes we can't perform Runtime operations.
+
+Marshalling
+-----------
+The process of converting java object to xml data
+
+	JAXBContext ctxt = JAXBContext.newInstance(Customer.class);
+	
+	Marshaller marshaller = ctxt.createMarshaller();
+	
+	marshaller.marshall(customerObj, System.out);
+
+
+Un-Marshalling
+--------------
+The process of converting xml data to java object
+
+	JAXBContext ctxt = JAXBContext.newInstance(Customer.class);
+	
+	UnMarshaller unmarshaller = ctxt.createUnMarshaller ( );
+
+	File f = new File("customer.xml");
+
+	Customer c  = (Customer) unmarshaller.unmarshall(f);
+
+
+Note: Marshalling & Un-Marshalling we can perform only on binding objects.
 
 
 
+Query Paramter
+--------------
+->Query Parameters are used in url to send data to server
 
+-> Query parameters will be available in key-value format
+
+	Ex:  ?id=101
+
+-> Query Parameter will start with question mark (?) symbol
+
+Note: Query parameter always should be at end of the url
+
+-> If we want to send more than one query parameter then we should use & operator
+
+
+To recieve query parameter we will write below piece of code in JEE
+-------------------------------------------------------------------
+String id = request.getParameter("id");
+Integer cid = Integer.parseInt(id);
+
+
+To represent query parameters in Spring Rest Controller we will use
+@RequestParam("key") annotation
+
+
+public Customer getCustomer(@RequestParam("id") Integer cid) {
+		//logic
+		return c;
+}
+
+
+
+Path Parameter
+---------------
+-> Path Parameters are used to send data to server in URL directly
+
+-> To recieve PathParameters we can use @PathVariable annotation
+
+@GetMapping(value="/getCustomer/{id}",produces="xml/json")
+public Customer getCustomer(@PathVariable("id") Integer cid){
+		//logic
+		return c;
+}
+
+
+
+Http Status Codes
+-----------------
+200-299  : OK (success)
+
+300-399 : Redirect
+
+400-499 : Client problem
+
+500-599 : Internal Server Problem
+
+
+Exception Handling in Rest API
+------------------------------
+We can handle exceptions in 2 ways
+
+1) Local Exception Handling (Controller specific)
+
+2) Global Exception Handling (Entire application)
+
+
+@ExceptionHandler(CustomerNotFoundException.class)
+public ResponseEntity<String> handleCNFException(){
+
+	ResponseEntity<String> re = 
+		new ResponseEntity("Invalid ID",400);
+
+}
+
+
+
+Difference between WSDL and WADL
+---------------------------------
+-> WSDL stands for Webservices description language
+
+-> WSDL contains details of provider
+
+-> WSDL is mandatory for SOAP based webservices
+
+-> Using WSDL consumer will understand provider
+
+-> WADL stands for Webapplication Description Language
+
+-> WADL provides webapplication documentation
+
+-> Rest API also can be described by using WADL
+
+-> WADL demand is very less in industry because of Swagger
+
+-> Swagger is used to generate documentation for Rest API
+
+-> Swagger UI can be used to test Rest api
+
+
+What is Swagger
+---------------
+Swagger is a custom documentation plugin which is used to generate documentation for web application.
+
+In Industry people are using Swagger mainely to describe only 
+Rest API.
+
+
+Adding to Swagger to Project
+-------------------------------
+
+1) Add swagger dependencies to project pom.xml
+
+		1) swagger documentation
+		2) swagger ui
+
+
+2) Create SwaggerConfiguration class using @Configuration annotation
+   and write a method to create Docket object using @Bean annotation
+   and enable swagger using @EnableSwagger2 annotation.
+
+
+3) Use Swagger annotations to provide more details about Rest API
+
+4) Run SpringBoot application and access documentation & UI using below URLs.
+
+http://localhost:9090/swagger-ui.html --> for UI screen
+
+http://localhost:9090/v2/api-docs --> for documentation in json
+
+
+Below are few annotations of Swagger
+------------------------------------
+@Api
+@ApiOperation
+@ApiParam
+@ApiModel
+@ApiModelProperty
+@ApiResponses
+@ApiResponse
+
+
+
+Spring Data
+-----------
+Spring Data is used to develop persistent logic for our application.
+
+This is mainely used to to perform only CURD operations.
+
+As part of Spring Data, we have below 2 Repositories
+----------------------------------------------------
+1) CrudRepository (curd operations)
+
+2) JpaRepository (curd operation + pagination + sorting)
+
+Working with SpringData in Project
+===================================
+1) Add Spring Data Jpa dependency in pom.xml file
+
+2) Add JDBC driver dependency in pom.xml
+
+3) Configure Data Source Properties in application.properties file or application.yml file
+
+4) Create Entity Class (mapping with database table)
+
+5) Create Repository interface by extending from SpringData Repository
+
+6) Inject Repository interface into service class and call methods to perform curd operations.
