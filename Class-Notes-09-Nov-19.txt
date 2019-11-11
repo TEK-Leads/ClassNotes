@@ -278,9 +278,6 @@ application.properties or application.yml
 
 
 
-
-
-
 presentation
 
 
@@ -1034,6 +1031,127 @@ Working with SpringData in Project
 6) Inject Repository interface into service class and call methods to perform curd operations.
 
 
+Methods available in CrudRepository
+-----------------------------------
 
+T save(T entity) --- polymorphic method (save and update)
+
+Optional findById(Serializable id)
+
+Iterable<T>  findAll( )
+
+Iterable<T> findAllById(Iterable<Serializable> ids)
+
+delete(T entity)
+
+deleteById(Serializable id)
+
+deleteAll( )
+
+deleteAllById(Iterable<Serializable> ids)
+
+long count()
+
+existById(Serializable id)
+
+
+Custom Queries in Spring Data
+-------------------------------
+We can execute Custom queries also in Spring data
+
+Custom Queries are fail-fast
+
+Custom queries will be compiled at the time of application startup
+
+To write the custom queries we will use @Query annotation
+
+Custom Queries Examples
+------------------------
+@Query(value = "select customerEmail from CustomerEntity")
+public List<String> findAllEmails();
+
+@Query(value = "from CustomerEntity where customerEmail=:email")
+public CustomerEntity findByCustomerEmail(String email);
+
+
+Application environments
+-------------------------
+Every applicaiton contains below environments to test properly.
+
+Local  : Development will happen
+
+DEV   : Developer Integration Testing
+
+QA    : System Integration Testing
+
+UAT   : User acceptance Testing
+
+Pilot/Staging  : Similar to prod  to test with real data
+
+Production : Go live
+
+From environment to environment few properties values are going to change like DB, smtp, logging, webservices endponints etc....
+
+In SpringBoot application we will configure below properties in application.properties file or application.yml file
+
+1) DB Config Properties
+
+2) ORM properties
+
+3) SMTP properties
+
+4) Webservice Endpoint URLs
+
+5) Application messages
+
+
+At the time of deployment changing environment specific properites everytime is difficult and time waste process. 
+
+To avoid this problem we will maintain envrinoment specific configuration files using Profiles concept.
+
+
+SpringBoot profiles
+-------------------
+Profiles are used to main environment specific configuration.
+
+we will create profiles like below
+
+application-dev.yml --> DEV profile file
+
+application-qa.yml  --> QA profile file
+
+application-uat.yml  --> UAT profile file
+
+application.yml ------ base file
+
+
+Note : in base yml we need to activate profile like below
+
+spring:
+  profiles:
+    active: qa
+
+
+Note: As per above configuration application application will load 
+qa yml file.
+
+
+Creating User in Oracle Database
+----------------------------------
+1) Connect to DB as a SysDba in SQL command line
+
+	Open sql command line and execute below command
+
+	Command : connect as sysdba;
+
+	Username : dba
+	password : abc
+
+2) Execute below queries
+
+   create user <uname> identified by <pwd>
+   grant connect, resource to <uname>
+
+3) Commit
 
 
