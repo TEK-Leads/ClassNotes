@@ -1,0 +1,124 @@
+Pivotal Cloud Foundry Notes
+----------------------------------------------------------------
+1) Open run.pivotal.io website
+
+2) Create Account (No Credit Card required)
+
+3) Choose Pivotal Webservices
+
+4) Select Free Trial
+
+5) Create Org & Space (Org : Project Name) (Space: Env names)
+
+One Org is equal to one project. 
+
+One Project can contain multiple micro services.
+
+One Space is equal to one environement.
+
+One Org can contain Multiple spaces also
+
+6) Download CF CLI software
+
+7) Install Cloud Foundry CLI (Download as per OS)
+
+8) After installation completed, open command prompt and verify CLI installation
+
+Command: cf -version  : It should gv version details
+
+Note: In Order to work with PCF using CLI, first we should login to CLI.
+
+command : cf login
+
+9) After login check target environment using below command
+
+	command : cf target
+
+10) Check apps available using below command 
+	
+	command : cf apps
+
+11) CF Apps, Routes, Start and Stop commands
+
+12) Push applicaiton to PCF using below command
+
+	Command : cf push <app-name>
+	Command : cf push <app-name> --randome-route
+
+13) When we execute push command it checks for appropriate buildpacks to deploy application. If it is not able to detect buildpack then push operation will be failed.
+
+14) To resolve that problem we can use below command
+
+    Command : cf push <app-name> -p target/jarfilename.jar
+
+Note: With the above command it detects java build pack to push
+
+
+15) Once push operation is successful, go to PCF account and verify apps running.
+
+16) It will display running apps under Org and Space and we can access application using app route url.
+
+17) We can see all the routes available in our account using below command
+
+     command : cf routes
+
+18) We can change app route also using below command
+
+  Command : 
+
+cf map-route sbrestapp cfapps.io --hostname tekleads-first-sb-rest-api
+
+
+19) Once Routing is completed we can access our application by using Routed URL also and old route also will work
+
+	Ex : https://tekleads-first-sb-rest-api.cfapps.io/welcome
+	     https://sbrestapp.cfapps.io/welcome
+
+20) After Testing these urls we can stop our application using stop command
+	
+	Ex : cf stop <app-name>
+
+
+21) If we want to push our application again, we should specify application name , route url , build pack etc... This is headache
+
+
+22) To make push option easy, we can create app manifest file for our application. In that manifest file we can specify application-name, route url and buildpack details etc.
+
+
+23) To create manifest file we can use below command
+
+	command : cf create-app-manifest  <app-name>
+
+	 	  cf create-app-manifest  SBRestApi
+
+
+24) When we execute the above command it will create manifest file for our application (appname-manifest.yml)
+
+25) We can see all application details in manifest.yml file
+
+26) By default it will create file with application but the default name should be manifest.yml (rename it)
+
+27) Configure path in manifest.yml (path: tareget/appjarfilename.jar)
+
+28) After manifest file is created we can push application to PCF using below command
+
+	Command : cf push
+
+
+-----------------manifest.yml-------------------------------------
+applications:
+- name: currency-conversion-api
+  disk_quota: 1G
+  instances: 1
+  memory: 1G
+  path: target/currency-conversion-api.jar
+  buildpack: https://github.com/cloudfoundry/java-buildpack.git
+  routes:
+  - route: tekleads-cc-api.cfapps.io
+  stack: cflinuxfs3
+---------------------------------------------------------------------
+
+
+
+
+
